@@ -1,5 +1,6 @@
 let user: string = "Ahamd";
 let age: number = 19;
+var price: number = 19;
 
 console.log(user);
 console.log(age);
