@@ -1,0 +1,16 @@
+{
+  "name": "my-first-nodejs-project",
+  "version": "1.0.0",
+  "description": "This is just my first project, I am just learning",
+  "main": "index.js",
+  "scripts": {
+    "compile": "tsc index.ts",
+    "start": "node index.js",
+    "dev-linux-mac": "tsc index.ts -w & nodemon index.js"
+  },
+  "author": "Khaldoun Halawani",
+  "license": "MIT",
+  "dependencies": {
+    "nodemon": "^2.0.22"
+  }
+}
