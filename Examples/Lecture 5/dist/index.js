@@ -2,29 +2,56 @@ import express from 'express';
 import data from './data/MOCK_DATA.js';
 const app = express();
 const port = 3000;
-// app.use(express.text()); // Just to read the body of requests
-app.use(express.json()); // Just to read the body of requests
-app.get('/students/all', (req, res) => {
-    res.json(data);
-});
-app.get('/students/passed', (request, response) => {
-    const passedStudents = data.filter(std => std.mark >= 60);
-    response.json({ students: passedStudents, total: passedStudents.length });
-});
+app.use(express.json());
 app.get('/students', (req, res) => {
-    // console.log(req);
     res.send(data);
 });
 app.post('/students', (req, res) => {
-    // console.log(req.headers);
-    // console.log(req.method);
-    // console.log("Request Body:");
-    // console.log(req.body);
     const newStudent = req.body;
     data.unshift(newStudent);
     res.send("Thanks, New student added!");
 });
+// students/1
+// students/3
+// students/anyID
+// students/100
+// students/   <== this will not catch
+app.put('/students/:id', (req, res) => {
+    const stdId = parseInt(req.params.id);
+    for (let i = 0; i < data.length; i++) {
+        if (data[i].id === stdId) {
+            data[i] = { ...data[i], ...req.body };
+            res.send("Success update student!");
+            return;
+        }
+    }
+    res.send("Failed update student!");
+});
+// /path?QParam=value&QParam2=value2&QParam3=value3
+// /students?id=10
+// /students?id=
+// /students?
+// /students?id=10&mark=60
+app.delete('/students', (req, res) => {
+    var _a;
+    if (!((_a = req.query) === null || _a === void 0 ? void 0 : _a.id)) {
+        res.send('Error: Please send student ID in query params!');
+        return;
+    }
+    else {
+        const stdId = parseInt(req.query.id.toString());
+        let found = data.findIndex((std) => std.id === stdId);
+        if (found >= 0) {
+            data.splice(found, 1);
+            res.send("Success Delete Student!");
+            return;
+        }
+        else {
+            res.send("Error: Student Not found!");
+        }
+    }
+});
+// app.get('/students?mark=Mark&collage=CollageName')
 app.listen(port, () => {
     console.log(`The app is listening on port ${port}`);
 });
-/// npm i @types/express -D
