@@ -2,6 +2,7 @@ import express from 'express';
 namespace Task {
   export interface Item {
     id: string,
+    index: number,
     userId: number,
     title: string,
     description: string,
@@ -13,15 +14,20 @@ namespace Task {
       userId: number,
       title: string,
       description: string
+    },
+    query: {
+      page: string;
+      pageSize: string;
     }
   }
 
   export interface Response extends express.Response {
-
-  }
-
-  export interface Mish3arfEash {
-
+    send: (body: string | {
+      page: number,
+      pageSize: number,
+      total: number,
+      items: Array<Item>   // Item[]
+    }) => this
   }
 }
 

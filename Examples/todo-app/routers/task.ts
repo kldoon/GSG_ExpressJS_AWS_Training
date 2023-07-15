@@ -5,8 +5,16 @@ import { v4 } from 'uuid';
 
 const router = express.Router();
 
-router.get('/', (req, res) => {
-  res.send(data);
+router.get('/', (req: Task.Request, res: Task.Response) => {
+  const page = parseInt(req.query.page || '1');
+  const pageSize = parseInt(req.query.pageSize || '10');
+  const filteredItems = data.slice((page - 1) * pageSize, page * pageSize) ;
+  res.send({
+    page,
+    pageSize,
+    total: data.length,
+    items: filteredItems //as Task.Item[]
+  });
 });
 
 router.get('/:id', (req, res) => {
@@ -30,9 +38,10 @@ router.post('/', (req: Task.Request, res: Task.Response) => {
     status: 'new',
     title: req.body.title,
     description: req.body.description,
-    userId: req.body.userId
+    userId: req.body.userId,
+    index: data.length
   };
-  
+
   data.unshift(newTask);
   res.status(201).send('Task Created');
 });
