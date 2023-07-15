@@ -7,11 +7,15 @@ const PORT = 3000;
 app.use(express.json());
 
 app.get('/', (req, res) => {
-  res.send('Server UP!')
+  res.send('Server UP!');
 });
 
 app.use('/todo/task', taskRouter);
 app.use('/todo/user', userRouter);
+
+app.use((req, res) => {
+  res.status(404).send("You requested something I don't have :(");
+});
 
 app.listen(PORT, () => {
   console.log(`App is running and Listening on port ${PORT}`);
