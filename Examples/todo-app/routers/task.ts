@@ -10,6 +10,9 @@ router.post('/', taskValidationMiddleware);
 router.put('/:id', taskValidationMiddleware);
 
 router.get('/', (req: Task.Request, res: Task.Response) => {
+  console.log(res.locals.user);
+  console.log("From get / task handler: " + res.locals.logMessage);
+
   const page = parseInt(req.query.page || '1');
   const pageSize = parseInt(req.query.pageSize || '10');
   const filteredItems = data.slice((page - 1) * pageSize, page * pageSize);
