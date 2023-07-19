@@ -6,11 +6,6 @@ import { taskValidationMiddleware } from '../middlewares/task.js';
 
 const router = express.Router();
 
-// router.use((req, res, next) => {
-//   console.log("Someone called the Task API!");
-//   next();
-// });
-
 router.post('/', taskValidationMiddleware);
 router.put('/:id', taskValidationMiddleware);
 
@@ -22,7 +17,7 @@ router.get('/', (req: Task.Request, res: Task.Response) => {
     page,
     pageSize,
     total: data.length,
-    items: filteredItems //as Task.Item[]
+    items: filteredItems
   });
 });
 
