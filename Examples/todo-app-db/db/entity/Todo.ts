@@ -1,4 +1,10 @@
-import { Entity, Column, PrimaryGeneratedColumn, BaseEntity } from "typeorm";
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  BaseEntity,
+  CreateDateColumn
+} from "typeorm";
 
 @Entity()
 export class Todo extends BaseEntity {
@@ -26,5 +32,9 @@ export class Todo extends BaseEntity {
   })
   status: 'new' | 'done';
 
-  testAttribute: string;
+  @CreateDateColumn({
+    type: 'timestamp',
+    default: () => "CURRENT_TIMESTAMP()"
+  })
+  createdAt: Date;
 }

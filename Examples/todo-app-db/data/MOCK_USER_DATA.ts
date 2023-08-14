@@ -1,20 +1,20 @@
-import { User } from "../types/users";
+import { User } from "../types/users.js";
 
 const data: User.User[] = [
   {
     id: '123',
     userName: 'Ahmad',
-    tokens: 10
+    tokens: 10000
   },
   {
     id: '321',
     userName: 'Hiba',
-    tokens: 15
+    tokens: 15000
   },
   {
     id: '126',
     userName: 'Saeed',
-    tokens: 5
+    tokens: 5000
   }
 ];
 

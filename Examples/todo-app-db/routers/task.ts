@@ -11,32 +11,51 @@ router.post('/', taskValidationMiddleware);
 router.put('/:id', taskValidationMiddleware);
 
 router.get('/', async (req: Task.Request, res: Task.Response) => {
-  // const page = parseInt(req.query.page || '1');
-  // const pageSize = parseInt(req.query.pageSize || '10');
-  // const filteredItems = data.slice((page - 1) * pageSize, page * pageSize);
   try {
-    const items = await Todo.find();
+    const page = parseInt(req.query.page || '1');
+    const pageSize = parseInt(req.query.pageSize || '10');
+
+    const [items, total] = await Todo.findAndCount({
+      // where: { status: 'done' },
+      skip: pageSize * (page - 1),
+      take: pageSize,
+      select: {
+        id: true,
+        userId: false,
+        title: true,
+        description: true,
+        status: true
+      },
+      order: {
+        createdAt: 'ASC'
+      }
+    });
+
+    // count all items
+    // const total = await Todo.count();
 
     res.send({
       page: 1,
       pageSize: items.length,
-      total: items.length,
+      total,
       items
     });
+
   } catch (error) {
     console.error(error);
     res.status(500).send("Something went wrong!");
   }
 });
 
-router.get('/:id', (req, res) => {
-  // const id = req.params.id;
-  // const task = data.find(it => it.id === id);
-  // if (task) {
-  //   res.status(200).send(task);
-  // } else {
-  //   res.status(404).send("Task not found");
-  // }
+router.get('/:id', async (req, res) => {
+  const id = req.params.id;
+  // const task = await Todo.findOne({ where: { id } });
+  const task = await Todo.findOneBy({ id });
+  if (task) {
+    res.status(200).send(task);
+  } else {
+    res.status(404).send("Task not found");
+  }
 });
 
 router.post('/', (req: Task.Request, res: Task.Response) => {
