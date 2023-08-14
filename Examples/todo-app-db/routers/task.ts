@@ -35,7 +35,7 @@ router.get('/', async (req: Task.Request, res: Task.Response) => {
     // const total = await Todo.count();
 
     res.send({
-      page: 1,
+      page,
       pageSize: items.length,
       total,
       items
