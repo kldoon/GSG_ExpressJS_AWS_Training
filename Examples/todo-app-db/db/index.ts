@@ -1,7 +1,7 @@
 import { DataSource } from 'typeorm';
 import { Todo } from './entity/Todo.js';
 
-const db = new DataSource({
+const dataSource = new DataSource({
   type: 'mysql',
   host: 'localhost',
   port: 3306,
@@ -9,15 +9,16 @@ const db = new DataSource({
   password: '',
   database: 'gsg_todo',
   entities: [Todo],
-  synchronize: true
+  synchronize: true,
+  logging: true
 });
 
 const initialize = () => {
-  db.initialize().then(() => {
+  dataSource.initialize().then(() => {
     console.log("Connected to DB!");
   }).catch(err => {
     console.error('Failed to connect to DB: ' + err);
   })
 }
 
-export default { initialize };
+export default { initialize, dataSource };
