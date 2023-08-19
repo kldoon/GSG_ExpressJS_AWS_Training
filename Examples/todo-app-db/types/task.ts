@@ -12,7 +12,8 @@ namespace Task {
     body: {
       userId: number,
       title: string,
-      description: string
+      description: string,
+      tags: string[]
     },
     query: {
       page: string;

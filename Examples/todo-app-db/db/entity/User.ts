@@ -1,5 +1,6 @@
-import { BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Todo } from "./Todo.js";
+import { Profile } from "./Profile.js";
 
 
 @Entity()
@@ -15,4 +16,8 @@ export class User extends BaseEntity {
 
   @OneToMany(() => Todo, todo => todo.user)
   todos: Todo[]
+
+  @OneToOne(() => Profile)
+  @JoinColumn()
+  profile: Profile
 }

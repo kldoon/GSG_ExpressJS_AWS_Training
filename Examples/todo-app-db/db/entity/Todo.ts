@@ -4,16 +4,19 @@ import {
   PrimaryGeneratedColumn,
   BaseEntity,
   CreateDateColumn,
-  ManyToOne
+  ManyToOne,
+  ManyToMany,
+  JoinTable
 } from "typeorm";
 import { User } from "./User.js";
+import { Tag } from "./Tag.js";
 
 @Entity()
 export class Todo extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @ManyToOne(() => User, user => user.todos)
+  @ManyToOne(() => User, user => user.todos, { eager: false })
   user: number;
 
   @Column({
@@ -39,4 +42,8 @@ export class Todo extends BaseEntity {
     default: () => "CURRENT_TIMESTAMP()"
   })
   createdAt: Date;
+
+  @ManyToMany(() => Tag, { cascade: true, eager: true })
+  @JoinTable()
+  tags: Tag[]
 }

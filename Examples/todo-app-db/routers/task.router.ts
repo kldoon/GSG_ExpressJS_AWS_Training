@@ -2,8 +2,9 @@ import express from 'express';
 import Task from '../types/task.js';
 import { taskValidationMiddleware } from '../middlewares/task.js';
 import { Todo } from '../db/entity/Todo.js';
-import { Like, MoreThan } from 'typeorm';
+import { In, Like, MoreThan } from 'typeorm';
 import db from '../db/index.js';
+import { Tag } from '../db/entity/Tag.js';
 
 const router = express.Router();
 
@@ -20,7 +21,7 @@ router.get('/', async (req: Task.Request, res: Task.Response) => {
       order: {
         createdAt: 'ASC'
       },
-      relations: ['user']
+      // relations: ['user', 'user.profile' ,'tags']
       // loadRelationIds: true,
     });
 
@@ -89,7 +90,10 @@ router.get('/sql', async (req, res) => {
 router.get('/:id', async (req, res) => {
   const id = req.params.id;
   // const task = await Todo.findOne({ where: { id } });
-  const task = await Todo.findOneBy({ id });
+  const task = await Todo.findOne({
+    where: { id },
+    relations: ['user', 'user.profile'],
+  });
   if (task) {
     res.status(200).send(task);
   } else {
@@ -97,11 +101,19 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-router.post('/', (req: Task.Request, res: Task.Response) => {
+router.post('/', async (req: Task.Request, res: Task.Response) => {
   const newTask = new Todo();
   newTask.title = req.body.title;
   newTask.description = req.body.description;
   newTask.user = req.body.userId;
+
+  const tags = await Tag.find({
+    where: {
+      id: In(req.body.tags)
+    }
+  });
+
+  newTask.tags = tags;
 
   newTask.save().then((response) => {
     res.status(201).send('Task Created with ID:' + response.id);

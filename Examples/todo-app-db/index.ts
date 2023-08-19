@@ -1,7 +1,7 @@
 import express from 'express';
 import "reflect-metadata";
-import taskRouter from './routers/task.js';
-import userRouter from './routers/user.js';
+import taskRouter from './routers/task.router.js';
+import userRouter from './routers/user.router.js';
 import { loggerMiddleware, rateLimitMiddleware } from './middlewares/generic.js';
 import db from './db/index.js';
 
