@@ -1,4 +1,5 @@
 import express from 'express';
+import { User } from '../db/entity/User.js';
 
 const router = express.Router();
 
@@ -11,8 +12,16 @@ router.get('/:id', (req, res) => {
   res.send('User by ID');
 });
 
-router.post('/', (req, res) => {
-  res.send('User Created');
+router.post('/', async (req, res) => {
+  try {
+    const user = new User();
+    user.userName = req.body.userName;
+    await user.save();
+    res.send('User Created');
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Something went wrong");
+  }
 });
 
 router.put('/:id', (req, res) => {

@@ -1,4 +1,4 @@
-import Task from '../types/task';
+import Task from '../types/task.js';
 import express from 'express';
 
 const taskValidationMiddleware = (req: Task.Request, res: express.Response, next: express.NextFunction) => {

@@ -15,23 +15,14 @@ router.get('/', async (req: Task.Request, res: Task.Response) => {
     const pageSize = parseInt(req.query.pageSize || '10');
 
     const [items, total] = await Todo.findAndCount({
-      // where: { status: 'done' },
       skip: pageSize * (page - 1),
       take: pageSize,
-      select: {
-        id: true,
-        userId: false,
-        title: true,
-        description: true,
-        status: true
-      },
       order: {
         createdAt: 'ASC'
-      }
+      },
+      relations: ['user']
+      // loadRelationIds: true,
     });
-
-    // count all items
-    // const total = await Todo.count();
 
     res.send({
       page,
@@ -76,7 +67,7 @@ router.get('/search', async (req: any, res: any) => {
     });
 
     // usersTotal is a meaningless number (just to demo the sum)
-    const usersTotal = await Todo.sum('userId', {});
+    const usersTotal = await Todo.sum('user', {});
 
     res.send({
       items,
@@ -110,7 +101,7 @@ router.post('/', (req: Task.Request, res: Task.Response) => {
   const newTask = new Todo();
   newTask.title = req.body.title;
   newTask.description = req.body.description;
-  newTask.userId = req.body.userId;
+  newTask.user = req.body.userId;
 
   newTask.save().then((response) => {
     res.status(201).send('Task Created with ID:' + response.id);

@@ -3,16 +3,18 @@ import {
   Column,
   PrimaryGeneratedColumn,
   BaseEntity,
-  CreateDateColumn
+  CreateDateColumn,
+  ManyToOne
 } from "typeorm";
+import { User } from "./User.js";
 
 @Entity()
 export class Todo extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
-  userId: number;
+  @ManyToOne(() => User, user => user.todos)
+  user: number;
 
   @Column({
     length: 50,

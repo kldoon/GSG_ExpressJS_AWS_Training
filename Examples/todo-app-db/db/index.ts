@@ -1,5 +1,6 @@
 import { DataSource } from 'typeorm';
 import { Todo } from './entity/Todo.js';
+import { User } from './entity/User.js';
 
 const dataSource = new DataSource({
   type: 'mysql',
@@ -8,7 +9,7 @@ const dataSource = new DataSource({
   username: 'root',
   password: '',
   database: 'gsg_todo',
-  entities: [Todo],
+  entities: [Todo, User],
   synchronize: true,
   logging: true
 });

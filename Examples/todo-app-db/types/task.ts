@@ -2,7 +2,7 @@ import express from 'express';
 namespace Task {
   export interface Item {
     id: string,
-    userId: number,
+    user: number,
     title: string,
     description: string,
     status: "new" | "done"
