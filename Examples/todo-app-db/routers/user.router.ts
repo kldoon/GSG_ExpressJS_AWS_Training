@@ -1,6 +1,7 @@
 import express from 'express';
 import { User } from '../db/entity/User.js';
 import { Profile } from '../db/entity/Profile.js';
+import db from '../db/index.js';
 
 const router = express.Router();
 
@@ -25,15 +26,20 @@ router.post('/', async (req, res) => {
     const profile = new Profile();
     profile.bio = 'Hello, Welcome to my Profile!';
     profile.imageURL = 'https://img.freepik.com/free-icon/user_318-563642.jpg';
-    await profile.save();
-
     user.userName = req.body.userName;
     user.profile = profile;
-    await user.save();
-    res.send('User Created');
+    db.dataSource.transaction(async (transactionManager) => {
+      await transactionManager.save(profile);
+      await transactionManager.save(user);
+    }).then(() => {
+      res.send('User Created');
+    }).catch(error => {
+      res.status(500).send("Something went wrong: " + error);
+    });
+
   } catch (error) {
     console.error(error);
-    res.status(500).send("Something went wrong");
+    res.status(500).send("Something went wrong, " + error);
   }
 });
 
@@ -41,8 +47,20 @@ router.put('/:id', (req, res) => {
   res.send('User Updated');
 });
 
-router.delete('/:id', (req, res) => {
-  res.send('User Deleted');
+router.delete('/:id', async (req, res) => {
+  try {
+    const id = Number(req.params.id);
+    const user = await User.findOneBy({ id });
+    if (user) {
+      await user.remove();
+      res.send('User Deleted');
+    } else {
+      res.status(404).send('User not found!');
+    }
+  } catch (error) {
+    res.status(500)
+      .send(`Something went wrong, you can't delete a user if he have todo items!`);
+  }
 });
 
 export default router;

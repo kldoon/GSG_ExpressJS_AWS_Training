@@ -16,7 +16,13 @@ export class Todo extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @ManyToOne(() => User, user => user.todos, { eager: false })
+  @ManyToOne(() => User, user => user.todos,
+    {
+      eager: false,
+      onDelete: 'CASCADE',  // SET NULL// RESTRICT
+      onUpdate: 'CASCADE'
+    }
+  )
   user: number;
 
   @Column({
