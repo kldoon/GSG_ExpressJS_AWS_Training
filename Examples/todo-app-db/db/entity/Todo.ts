@@ -6,11 +6,13 @@ import {
   CreateDateColumn,
   ManyToOne,
   ManyToMany,
-  JoinTable
+  JoinTable,
+  Index
 } from "typeorm";
 import { User } from "./User.js";
 import { Tag } from "./Tag.js";
 
+@Index("id_title_index", ['id', 'title'])
 @Entity()
 export class Todo extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
@@ -36,6 +38,7 @@ export class Todo extends BaseEntity {
   })
   description: string;
 
+  @Index("status_index")
   @Column({
     type: 'enum',
     enum: ['new', 'done'],
